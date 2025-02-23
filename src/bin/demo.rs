@@ -131,17 +131,12 @@ impl eframe::App for DemoApp {
 
                         let text_edit = TextEdit::singleline(&mut self.text_edit_text).hint_text(
                             "Type something here..."
-                        );
+                        ).background_color(self.theme.colors.widget_bg_color_idle)
+                        .min_size([200.0, 30.0].into());
                         ui.label("TextEdit");
 
-                        // Override the visuals to give a border only to the TextEdit
-                        ui.scope(|ui| {
-                            let color1 = self.theme.colors.border_color_idle;
-                            let color2 = self.theme.colors.border_color_hover;
-                            utils::border_on_idle(ui, 1.0, color1);
-                            utils::border_on_hover(ui, 1.0, color2);
-                            ui.add(text_edit);
-                        });
+                        ui.add(text_edit);
+                        
                         ui.add_space(20.0);
 
                         ui.horizontal(|ui| {

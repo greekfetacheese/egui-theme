@@ -107,6 +107,7 @@ impl ThemeEditor {
         ui.vertical_centered(|ui| {
             ui.spacing_mut().item_spacing.y = 20.0;
 
+             
             CollapsingHeader::new("Theme Frames").show(ui, |ui| {
                 CollapsingHeader::new("Frame 1").show(ui, |ui| {
                     self.frame_settings(&mut theme.frame1, &mut theme.frame1_visuals, ui);
@@ -116,13 +117,23 @@ impl ThemeEditor {
                     self.frame_settings(&mut theme.frame2, &mut theme.frame2_visuals, ui);
                 });
             });
+            
 
             CollapsingHeader::new("Theme Colors").show(ui, |ui| {
                 ui.label("Background Color");
                 color_edit_button_srgba(ui, &mut theme.colors.bg_color, Alpha::OnlyBlend);
 
+                ui.label("Highlight Color");
+                color_edit_button_srgba(ui, &mut theme.colors.highlight, Alpha::OnlyBlend);
+
                 ui.label("Text Color");
                 color_edit_button_srgba(ui, &mut theme.colors.text_color, Alpha::OnlyBlend);
+
+                ui.label("Text Secondary Color");
+                color_edit_button_srgba(ui, &mut theme.colors.text_secondary, Alpha::OnlyBlend);
+
+                ui.label("Overlay Color");
+                color_edit_button_srgba(ui, &mut theme.colors.overlay_color, Alpha::OnlyBlend);
 
                 ui.label("Widget Bg Color on idle");
                 color_edit_button_srgba(ui, &mut theme.colors.widget_bg_color_idle, Alpha::OnlyBlend);
@@ -136,7 +147,7 @@ impl ThemeEditor {
                 ui.label("Widget Bg Color on open");
                 color_edit_button_srgba(ui, &mut theme.colors.widget_bg_color_open, Alpha::OnlyBlend);
 
-                ui.label("Border Color");
+                ui.label("Border Color on idle");
                 color_edit_button_srgba(ui, &mut theme.colors.border_color_idle, Alpha::OnlyBlend);
 
                 ui.label("Border Color on click");
@@ -181,16 +192,16 @@ impl ThemeEditor {
 
             CollapsingHeader::new("Window Visuals").show(ui, |ui| {
                 ui.label("Window Rounding");
-                ui.add(Slider::new(&mut theme.style.visuals.window_rounding.nw, 0.0..=35.0).text("Top Left"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_rounding.ne, 0.0..=35.0).text("Top Right"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_rounding.sw, 0.0..=35.0).text("Bottom Left"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_rounding.se, 0.0..=35.0).text("Bottom Right"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_corner_radius.nw, 0..=35).text("Top Left"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_corner_radius.ne, 0..=35).text("Top Right"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_corner_radius.sw, 0..=35).text("Bottom Left"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_corner_radius.se, 0..=35).text("Bottom Right"));
 
                 ui.label("Window Shadow");
-                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.offset.x, -100.0..=100.0).text("Offset X"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.offset.y, -100.0..=100.0).text("Offset Y"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.blur, 0.0..=100.0).text("Blur"));
-                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.spread, 0.0..=100.0).text("Spread"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.offset[0], -100..=100).text("Offset X"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.offset[1], -100..=100).text("Offset Y"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.blur, 0..=100).text("Blur"));
+                ui.add(Slider::new(&mut theme.style.visuals.window_shadow.spread, 0..=100).text("Spread"));
                 ui.label("Shadow Color");
                 color_edit_button_srgba(ui, &mut theme.style.visuals.window_shadow.color, Alpha::OnlyBlend);
 
@@ -206,18 +217,18 @@ impl ThemeEditor {
             });
 
             CollapsingHeader::new("Popup Shadow").show(ui, |ui| {
-                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.offset.x, -100.0..=100.0).text("Offset X"));
-                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.offset.y, -100.0..=100.0).text("Offset Y"));
-                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.blur, 0.0..=100.0).text("Blur"));
-                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.spread, 0.0..=100.0).text("Spread"));
+                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.offset[0], -100..=100).text("Offset X"));
+                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.offset[1], -100..=100).text("Offset Y"));
+                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.blur, 0..=100).text("Blur"));
+                ui.add(Slider::new(&mut theme.style.visuals.popup_shadow.spread, 0..=100).text("Spread"));
                 color_edit_button_srgba(ui, &mut theme.style.visuals.popup_shadow.color, Alpha::OnlyBlend);
             });
 
             CollapsingHeader::new("Menu Rounding").show(ui, |ui| {
-                ui.add(Slider::new(&mut theme.style.visuals.menu_rounding.nw, 0.0..=35.0).text("Top Left"));
-                ui.add(Slider::new(&mut theme.style.visuals.menu_rounding.ne, 0.0..=35.0).text("Top Right"));
-                ui.add(Slider::new(&mut theme.style.visuals.menu_rounding.sw, 0.0..=35.0).text("Bottom Left"));
-                ui.add(Slider::new(&mut theme.style.visuals.menu_rounding.se, 0.0..=35.0).text("Bottom Right"));
+                ui.add(Slider::new(&mut theme.style.visuals.menu_corner_radius.nw, 0..=35).text("Top Left"));
+                ui.add(Slider::new(&mut theme.style.visuals.menu_corner_radius.ne, 0..=35).text("Top Right"));
+                ui.add(Slider::new(&mut theme.style.visuals.menu_corner_radius.sw, 0..=35).text("Bottom Left"));
+                ui.add(Slider::new(&mut theme.style.visuals.menu_corner_radius.se, 0..=35).text("Bottom Right"));
             });
 
             CollapsingHeader::new("Widget Visuals").show(ui, |ui| {
@@ -242,10 +253,10 @@ impl ThemeEditor {
                 color_edit_button_srgba(ui, &mut widget_visuals.bg_stroke.color, Alpha::OnlyBlend);
 
                 ui.label("Rounding");
-                ui.add(Slider::new(&mut widget_visuals.rounding.nw, 0.0..=35.0).text("Top Left"));
-                ui.add(Slider::new(&mut widget_visuals.rounding.ne, 0.0..=35.0).text("Top Right"));
-                ui.add(Slider::new(&mut widget_visuals.rounding.sw, 0.0..=35.0).text("Bottom Left"));
-                ui.add(Slider::new(&mut widget_visuals.rounding.se, 0.0..=35.0).text("Bottom Right"));
+                ui.add(Slider::new(&mut widget_visuals.corner_radius.nw, 0..=35).text("Top Left"));
+                ui.add(Slider::new(&mut widget_visuals.corner_radius.ne, 0..=35).text("Top Right"));
+                ui.add(Slider::new(&mut widget_visuals.corner_radius.sw, 0..=35).text("Bottom Left"));
+                ui.add(Slider::new(&mut widget_visuals.corner_radius.se, 0..=35).text("Bottom Right"));
 
                 ui.label("Foreground Stroke Color");
                 ui.add(Slider::new(&mut widget_visuals.fg_stroke.width, 0.0..=10.0).text("Stroke Width"));
@@ -268,16 +279,16 @@ impl ThemeEditor {
     fn frame_settings(&mut self, frame: &mut Frame, visuals: &mut FrameVisuals, ui: &mut Ui) {
         CollapsingHeader::new("Inner & Outter Margin").show(ui, |ui| {
             ui.label("Inner Margin");
-            ui.add(Slider::new(&mut frame.inner_margin.top, 0.0..=100.0).text("Top"));
-            ui.add(Slider::new(&mut frame.inner_margin.bottom, 0.0..=100.0).text("Bottom"));
-            ui.add(Slider::new(&mut frame.inner_margin.left, 0.0..=100.0).text("Left"));
-            ui.add(Slider::new(&mut frame.inner_margin.right, 0.0..=100.0).text("Right"));
+            ui.add(Slider::new(&mut frame.inner_margin.top, 0..=100).text("Top"));
+            ui.add(Slider::new(&mut frame.inner_margin.bottom, 0..=100).text("Bottom"));
+            ui.add(Slider::new(&mut frame.inner_margin.left, 0..=100).text("Left"));
+            ui.add(Slider::new(&mut frame.inner_margin.right, 0..=100).text("Right"));
 
             ui.label("Outter Margin");
-            ui.add(Slider::new(&mut frame.outer_margin.top, 0.0..=100.0).text("Top"));
-            ui.add(Slider::new(&mut frame.outer_margin.bottom, 0.0..=100.0).text("Bottom"));
-            ui.add(Slider::new(&mut frame.outer_margin.left, 0.0..=100.0).text("Left"));
-            ui.add(Slider::new(&mut frame.outer_margin.right, 0.0..=100.0).text("Right"));
+            ui.add(Slider::new(&mut frame.outer_margin.top, 0..=100).text("Top"));
+            ui.add(Slider::new(&mut frame.outer_margin.bottom, 0..=100).text("Bottom"));
+            ui.add(Slider::new(&mut frame.outer_margin.left, 0..=100).text("Left"));
+            ui.add(Slider::new(&mut frame.outer_margin.right, 0..=100).text("Right"));
         });
 
         CollapsingHeader::new("Visuals").show(ui, |ui| {
@@ -285,16 +296,16 @@ impl ThemeEditor {
         });
 
         ui.label("Rounding");
-        ui.add(Slider::new(&mut frame.rounding.nw, 0.0..=35.0).text("Top Left"));
-        ui.add(Slider::new(&mut frame.rounding.ne, 0.0..=35.0).text("Top Right"));
-        ui.add(Slider::new(&mut frame.rounding.sw, 0.0..=35.0).text("Bottom Left"));
-        ui.add(Slider::new(&mut frame.rounding.se, 0.0..=35.0).text("Bottom Right"));
+        ui.add(Slider::new(&mut frame.corner_radius.nw, 0..=35).text("Top Left"));
+        ui.add(Slider::new(&mut frame.corner_radius.ne, 0..=35).text("Top Right"));
+        ui.add(Slider::new(&mut frame.corner_radius.sw, 0..=35).text("Bottom Left"));
+        ui.add(Slider::new(&mut frame.corner_radius.se, 0..=35).text("Bottom Right"));
 
         ui.label("Shadow");
-        ui.add(Slider::new(&mut frame.shadow.offset.x, -100.0..=100.0).text("Offset X"));
-        ui.add(Slider::new(&mut frame.shadow.offset.y, -100.0..=100.0).text("Offset Y"));
-        ui.add(Slider::new(&mut frame.shadow.blur, 0.0..=100.0).text("Blur"));
-        ui.add(Slider::new(&mut frame.shadow.spread, 0.0..=100.0).text("Spread"));
+        ui.add(Slider::new(&mut frame.shadow.offset[0], -100..=100).text("Offset X"));
+        ui.add(Slider::new(&mut frame.shadow.offset[1], -100..=100).text("Offset Y"));
+        ui.add(Slider::new(&mut frame.shadow.blur, 0..=100).text("Blur"));
+        ui.add(Slider::new(&mut frame.shadow.spread, 0..=100).text("Spread"));
         ui.label("Shadow Color");
         color_edit_button_srgba(ui, &mut frame.shadow.color, Alpha::OnlyBlend);
 

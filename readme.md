@@ -81,3 +81,5 @@ let custom_theme = Theme::from_custom(path).unwrap();
 ``` rust
 cargo run --features demo --bin demo
 ```
+
+## Thanks to the [Catppuccin](https://github.com/catppuccin/catppuccin) for their color palettes

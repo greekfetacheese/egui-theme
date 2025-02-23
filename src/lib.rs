@@ -10,7 +10,8 @@ pub use editor::ThemeEditor;
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ThemeKind {
-    Midnight,
+    /// https://catppuccin.com/palette/
+    Mocha,
 
     /// A custom theme
     Custom,
@@ -19,13 +20,13 @@ pub enum ThemeKind {
 impl ThemeKind {
     pub fn to_str(&self) -> &str {
         match self {
-            ThemeKind::Midnight => "Midnight",
+            ThemeKind::Mocha => "Mocha",
             ThemeKind::Custom => "Custom",
         }
     }
 
     pub fn to_vec() -> Vec<Self> {
-        vec![Self::Midnight]
+        vec![{Self::Mocha}]
     }
 }
 
@@ -46,7 +47,7 @@ impl Theme {
     /// Use [Theme::from_custom()] instead
     pub fn new(kind: ThemeKind) -> Self {
         let theme = match kind {
-            ThemeKind::Midnight => themes::midnight::theme(),
+            ThemeKind::Mocha => themes::mocha::theme(),
             ThemeKind::Custom => panic!("{}", PANIC_MSG),
         };
 
@@ -78,8 +79,17 @@ pub struct ThemeColors {
     /// Background color for the entire app
     pub bg_color: Color32,
 
+    /// Highlight something
+    pub highlight: Color32,
+
+    /// An overlay color, used for example when a window is open to darken the background
+    pub overlay_color: Color32,
+
     /// Text color
     pub text_color: Color32,
+
+    /// Secondary text color
+    pub text_secondary: Color32,
 
     /// Widget background color for inactive widgets (no hover or clicks)
     ///
