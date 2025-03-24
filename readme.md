@@ -6,7 +6,7 @@
 
 ``` rust
 use egui::Context;
-use egui_theme::{Theme, ThemeKind, ThemeEditor, utils};
+use egui_theme::{Theme, ThemeKind, ThemeEditor, utils::widget_visuals};
 
 struct MyApp {
     theme: Theme,
@@ -28,32 +28,48 @@ impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
 
+            // If you want to use the theme editor and see the changes in real time
             // apply any changes we made to the ui
             utils::apply_theme_changes(&self.theme, ui);
-
             // keep the editor open
             self.editor.open = true;
-            
             // show the editor and get the new theme
             let new_theme = self.editor.show(&mut self.theme, ui);
             if let Some(theme) = new_theme {
                 self.theme = theme;
             }
 
-            // utils has shortucts to override the ui visuals
-            // example:
-            ui.button("Click Me!");
+            let theme = &self.theme;
+            let text = RichText::new("Hello world!").size(theme.text_sizes.normal);
+            ui.add(text);
 
-            // Override the visuals to give a border only to the TextEdit
-            ui.scope(|ui| {
-            let text_edit = TextEdit::singleline(&mut self.text_edit_text).hint_text(
-            "Type something here...");
+            let button_text = RichText::new("Click me!").size(theme.text_sizes.normal);
+            if ui.add(Button::new(button_text)).clicked() {
+                println!("Button clicked!");
+            }
 
-                let color1 = self.theme.colors.border_color_idle;
-                let color2 = self.theme.colors.border_color_hover;
-                utils::border_on_idle(ui, 1.0, color1);
-                utils::border_on_hover(ui, 1.0, color2);
-                ui.add(text_edit);
+            ui.add(TextEdit::singleline(&mut self.text_edit_text).hint_text("Type something here..."));
+
+            let frame = theme.frame1;
+            // bg color for the uis inside the frame is different
+            let bg_color = frame.fill;
+
+            frame.show(ui, |ui| {
+                ui.set_width(450.0);
+                ui.set_height(250.0);
+                
+                // get the button visuals based on the bg color
+                let visuals = theme.get_button_visuals(bg_color);
+                let button_text = RichText::new("Click me!").size(theme.text_sizes.normal);
+                widget_visuals(ui, visuals);
+                if ui.add(Button::new(button_text)).clicked() {
+                    println!("Button clicked!");
+                }
+
+                // get the text edit visuals based on the bg color
+                let visuals = theme.get_text_edit_visuals(bg_color);
+                widget_visuals(ui, visuals);
+                ui.add(TextEdit::singleline(&mut self.text_edit_text).hint_text("Type something here..."));
             });
 
         });
@@ -81,5 +97,3 @@ let custom_theme = Theme::from_custom(path).unwrap();
 ``` rust
 cargo run --features demo --bin demo
 ```
-
-## Thanks to the [Catppuccin](https://github.com/catppuccin/catppuccin) for their color palettes
