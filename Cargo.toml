@@ -2,7 +2,7 @@
 name = "egui-theme"
 authors = ["Michalis Molfetas"]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "Theme selection & customization for egui"
 readme = "readme.md"
 repository = "https://github.com/greekfetacheese/egui-theme"
