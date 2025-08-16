@@ -2,6 +2,7 @@ use egui::{Color32, Frame, style::Style};
 
 const PANIC_MSG: &str = "Custom theme not supported, use Theme::from_custom() instead";
 
+pub mod window;
 pub mod editor;
 pub mod themes;
 pub mod utils;
@@ -50,6 +51,8 @@ pub struct Theme {
    pub style: Style,
    pub colors: ThemeColors,
    pub text_sizes: TextSizes,
+   /// Used for [window::window_frame]
+   pub window_frame: Frame,
    /// Base container frame for major UI sections.
    pub frame1: Frame,
    /// Frame for nested elements, like individual list items.
